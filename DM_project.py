@@ -48,3 +48,26 @@ class Graph:
             self.remove_edge(node, i)
         del self.graph[node_index]
         del self.nodes_list[node_index]
+
+    def add_nodes(self, *args):
+        for node in args:
+            self.add_node(node)
+
+    def remove_nodes(self, *args):
+        for node in args:
+            self.remove_node(node)
+
+    def add_edges(self, *args):
+        for first_node, second_node, weight in args:
+            self.add_edge(first_node, second_node, weight)
+
+    def remove_edges(self, *args):
+        for first_node, second_node in args:
+            self.remove_edge(first_node, second_node)
+
+    def clear(self):
+        self.nodes_list = []
+        self.graph = []
+
+    def clear_edges(self):
+        self.graph = [{} for i in range(len(self.nodes_list))]
