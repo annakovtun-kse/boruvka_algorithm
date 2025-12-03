@@ -77,18 +77,6 @@ class Graph:
     def clear_edges(self):
         self.graph = [{} for i in range(len(self.nodes_list))]
 
-    """def get_matrix(self):
-        adj_matrix = []
-        for i in range(len(self.adj_list)):
-            adj_matrix.append([0] * len(self.adj_list))
-
-        for i in list(self.adj_list.items()):
-            row = i[0]
-            row_val = i[1].keys()
-            weight = i[1].keys().values()
-            adj_matrix[]
-        return adj_matrix
-    """
 
 
     def get_matrix(self):
