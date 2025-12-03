@@ -71,3 +71,23 @@ class Graph:
 
     def clear_edges(self):
         self.graph = [{} for i in range(len(self.nodes_list))]
+
+    def get_matrix(self):
+        nodes = sorted(dict(zip(a.nodes_list, a.graph)).keys())
+        num_nodes = len(nodes)
+        node_to_index = {}
+        for i, node in enumerate(nodes):
+            node_to_index[node] = i
+        adj_matrix = []
+        for i in range(num_nodes):
+            adj_matrix.append([0] * num_nodes)
+
+        for u, neighbors in dict(zip(a.nodes_list, a.graph)).items():
+            row_idx = node_to_index[u]
+            for v, weight in neighbors.items():
+                if v in node_to_index:
+                    col_idx = node_to_index[v]
+
+                    adj_matrix[row_idx][col_idx] = weight
+
+        return adj_matrix
