@@ -1,3 +1,4 @@
+import timeit
 class Graph:
     def __init__(self):
         self.nodes_list = []
@@ -7,7 +8,7 @@ class Graph:
         if type(node) != str:
             raise TypeError("Nodes' name should be string")
         if node in self.nodes_list:
-            return "Such node is already exist"
+            raise ValueError("Such node is already exist")
         self.nodes_list.append(node)
         self.graph.append(dict())
 
@@ -41,7 +42,7 @@ class Graph:
         if type(node) != str:
             raise TypeError("Nodes' name should be string")
         if not node in self.nodes_list:
-            return "Such node isn't exist"
+            raise ValueError("Such node doesn't exist")
         node_index = self.nodes_list.index(node)
         local_nodes_list = set(self.graph[node_index].keys()).copy()
         for i in local_nodes_list:
@@ -73,21 +74,77 @@ class Graph:
         self.graph = [{} for i in range(len(self.nodes_list))]
 
     def get_matrix(self):
-        nodes = sorted(dict(zip(a.nodes_list, a.graph)).keys())
-        num_nodes = len(nodes)
-        node_to_index = {}
-        for i, node in enumerate(nodes):
-            node_to_index[node] = i
-        adj_matrix = []
-        for i in range(num_nodes):
-            adj_matrix.append([0] * num_nodes)
+        _ = float("inf")
+        matrix = []
+        nodes_number = len(self.nodes_list)
+        for i in self.nodes_list:
+            matrix.append([_] * nodes_number)
+        for row_index, i in enumerate(self.graph):
+            for k in i.keys():
+                col_index = self.nodes_list.index(k)
+                matrix[row_index][col_index] = i[k]
+        return matrix
 
-        for u, neighbors in dict(zip(a.nodes_list, a.graph)).items():
-            row_idx = node_to_index[u]
-            for v, weight in neighbors.items():
-                if v in node_to_index:
-                    col_idx = node_to_index[v]
+    def get_weight(self, first_node, second_node):
+        if not first_node in self.nodes_list:
+            raise ValueError(f"There is no {first_node} node in graph")
+        if not second_node in self.nodes_list:
+            raise ValueError(f"There is no {second_node} node in graph")
+        if first_node == second_node:
+            raise ValueError("First node and second node should be different")
+        first_node_index = self.nodes_list.index(first_node)
+        second_node_index = self.nodes_list.index(second_node)
+        if not second_node in self.graph[first_node_index].keys():
+            raise ValueError(f"There is no edge between {first_node} and {second_node}")
+        weight = self.graph[first_node_index][second_node]
+        return weight
 
-                    adj_matrix[row_idx][col_idx] = weight
+    def get_size(self):
+        size = 0
+        for i in self.graph:
+            size += len(i)
+        size /= 2
+        size = int(size)
+        return size
 
-        return adj_matrix
+    def get_min_edge(self, node):
+        if type(node) != str:
+            raise TypeError("Nodes' name should be string")
+        if not node in self.nodes_list:
+            raise ValueError("Such node doesn't exist")
+        node_index = self.nodes_list.index(node)
+        if len(self.graph[node_index]) == 0:
+            raise ValueError("This node hasn't any edges")
+        min_weight = min(self.graph[node_index].items(), key=lambda x: x[1])
+        return min_weight
+
+#     def get_connected_component(self, node, connection_dict=None):
+#         if type(node) != str:
+#             raise TypeError("Nodes' name should be string")
+#         if not node in self.nodes_list:
+#             raise ValueError("Such node doesn't exist")
+#         connected_component = {node: True}
+#         node_index = self.nodes_list.index(node)
+#         for i in self.graph[node_index]:
+#             connected_component[i] = False
+#         for i in connected_component:
+#             if connected_component[i]:
+#                 continue
+#             self.get_connected_component(i, connected_component)
+#         return connected_component
+#
+#
+#
+# def boruvka_algorythm(graph_object: Graph, nodes_num, tough):
+#     mst = Graph()
+#     mst.add_nodes(graph_object.nodes_list)
+#     while mst.get_size() < nodes_num - 1:
+#         for i in graph_object.nodes_list:
+#             mst.add_edge(graph_object.get_min_edge(i))
+#
+#
+#
+# a = Graph()
+# a.add_nodes("a", "b", "c", "h")
+# a.add_edges(("a", "b", 3), ("b", "c", 4), ("h", "c", 4))
+# print(dict(zip(a.nodes_list, a.graph)), a.get_connected_component("b"))
