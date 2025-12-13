@@ -1,8 +1,7 @@
 import time
 import matplotlib.pyplot as plt
-from task.py import MatrixGraph, generate_erdos_renyi_matrix, boruvka_mst
 
-def run_full_experiment():                                     #Функція для оцінки швидкості алгоритму та генерації графіку
+def run_full_experiment():
 
     vertex_sizes = [50, 75, 100, 125, 150, 175, 200, 225, 250]
     densities = [0.65, 0.7, 0.75, 0.8, 0.85, 0.9]
@@ -10,19 +9,21 @@ def run_full_experiment():                                     #Функція �
 
     results = {}
     for density in densities:
+        print(density, "\n", "="*10)
         results[density] = []
         for v in vertex_sizes:
+            print(v)
             curr_times = []
             for i in range(iterations):
-                g = MatrixGraph()
-                generate_erdos_renyi_matrix(g, v, density)
+                g = Graph()
+                generate_erdos_renyi(g, v, density)
 
                 s = time.perf_counter()
-                boruvka_mst(g)
+                boruvka_algorythm(g)
                 e = time.perf_counter()
                 curr_times.append(e - s)
 
-                with open('matrix_experiment.csv', 'a') as f:
+                with open('list_experiment.csv', 'a') as f:
                     f.write(f'{v},{density},{e-s}\n')
 
             avg = sum(curr_times) / len(curr_times)
